@@ -2,7 +2,7 @@ module github.com/authgear/authgear-server
 
 // go1.21 supports toolchain
 // See https://go.dev/doc/toolchain
-go 1.23.6
+go 1.24.1
 
 require (
 	github.com/Masterminds/sprig v2.22.0+incompatible
@@ -83,12 +83,12 @@ require (
 )
 
 require (
-	github.com/XSAM/otelsql v0.37.0
 	github.com/authgear/oauthrelyingparty v1.5.0
 	github.com/coder/websocket v1.8.13
 	github.com/go-gsm/charset v1.0.0
 	github.com/go-ldap/ldap/v3 v3.4.10
 	github.com/goaux/decowriter v1.0.0
+	github.com/iawaknahc/gogenwrapper v0.0.0-20250315204045-eb8ab595ac5c
 	github.com/kr/pretty v0.3.1
 	github.com/minio/minio-go/v7 v7.0.88
 	github.com/rivo/uniseg v0.4.7
@@ -141,6 +141,8 @@ require (
 	go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc v0.59.0 // indirect
 	go.opentelemetry.io/otel/trace v1.35.0 // indirect
 	go.opentelemetry.io/proto/otlp v1.5.0 // indirect
+	golang.org/x/telemetry v0.0.0-20240522233618-39ace7a40ae7 // indirect
+	golang.org/x/vuln v1.1.4 // indirect
 	google.golang.org/grpc v1.71.0 // indirect
 )
 
@@ -242,4 +244,11 @@ require (
 	sigs.k8s.io/gateway-api v1.1.0 // indirect
 	sigs.k8s.io/json v0.0.0-20221116044647-bc3834ca7abd // indirect
 	sigs.k8s.io/structured-merge-diff/v4 v4.4.1 // indirect
+)
+
+tool (
+	github.com/golang/mock/mockgen
+	github.com/google/wire/cmd/wire
+	golang.org/x/tools/cmd/goimports
+	golang.org/x/vuln/cmd/govulncheck
 )

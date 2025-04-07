@@ -1,11 +1,10 @@
 package db
 
 import (
-	"database/sql"
 	"errors"
 	"sync"
 
-	"github.com/authgear/authgear-server/pkg/util/otelutil"
+	"github.com/authgear/authgear-server/pkg/util/otelutil/oteldatabasesql"
 )
 
 var actualPoolOpener = openPostgresDB
@@ -14,15 +13,15 @@ type Pool struct {
 	closed     bool
 	closeMutex sync.RWMutex
 
-	cache      map[ConnectionInfo]*sql.DB
+	cache      map[ConnectionInfo]*oteldatabasesql.ConnPool
 	cacheMutex sync.RWMutex
 }
 
 func NewPool() *Pool {
-	return &Pool{cache: map[ConnectionInfo]*sql.DB{}}
+	return &Pool{cache: map[ConnectionInfo]*oteldatabasesql.ConnPool{}}
 }
 
-func (p *Pool) Open(info ConnectionInfo, opts ConnectionOptions) (db *sql.DB, err error) {
+func (p *Pool) Open(info ConnectionInfo, opts ConnectionOptions) (db *oteldatabasesql.ConnPool, err error) {
 	p.closeMutex.RLock()
 	defer func() { p.closeMutex.RUnlock() }()
 	if p.closed {
@@ -65,8 +64,13 @@ func (p *Pool) Close() (err error) {
 	return
 }
 
-func openPostgresDB(info ConnectionInfo, opts ConnectionOptions) (*sql.DB, error) {
-	pgdb, err := otelutil.OTelSQLOpenPostgres(info.DatabaseURL)
+func openPostgresDB(info ConnectionInfo, opts ConnectionOptions) (*oteldatabasesql.ConnPool, error) {
+	pgdb, err := oteldatabasesql.Open(oteldatabasesql.OpenOptions{
+		DriverName: "postgres",
+		DSN:        info.DatabaseURL,
+		PoolName:   string(info.Purpose),
+		IdleMax:    opts.MaxIdleConnection,
+	})
 	if err != nil {
 		return nil, err
 	}

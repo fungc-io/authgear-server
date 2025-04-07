@@ -26,7 +26,7 @@ COPY ./portal .
 RUN npm run build
 
 # Stage 2: Build the Go binary
-FROM quay.io/theauthgear/golang:1.23.6-noble AS authgear-portal-stage-2
+FROM quay.io/theauthgear/golang:1.24.1-noble AS authgear-portal-stage-2
 
 # Install build time C dependencies
 RUN set -eux; \
@@ -74,8 +74,7 @@ RUN set -eux; \
             libmagic-mgc \
             ca-certificates \
             media-types \
-            tzdata; \
-        dpkg --status tzdata | awk '$1 ~ /^Version:$/ { print $2 }' | grep '^2024b'; \
+            tzdata=2025b\*; \
         rm -rf /var/lib/apt/lists/*
 COPY --from=authgear-portal-stage-2 /src/authgear-portal /usr/local/bin/
 # There is no need to run update-ca-certificates
